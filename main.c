@@ -11,15 +11,14 @@ int main(int argc, char *argv[])
 	struct TLV_simple *t = NULL;
 	tlvcmdsize cmd = 2;		/* just for test */
 	tlvlensize len = 0;	/* also just for test */
-	uint8_t data[10] = {0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9};	/* still for test */
+	uint8_t data[1000] = {0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9};	/* still for test */
 	char *chr = NULL;
 	struct TLV_simple_Opr *p_tlv_s_opr = get_tlv_s_opr();
 	uint32_t i, asciilen;
 	uint8_t *ksf_initiator = p_tlv_s_opr->key_scatter_factor;			/* Initiator Key Dispersion Factor */
 	uint8_t *ksf_responder = &(p_tlv_s_opr->key_scatter_factor)[8];		/* Responder Key Dispersion Factor */
-	//char reply[] = "QgARAAEAAAAEAAIAxDd4WQAAAAA=";
-	//char reply[] = "QgARAAEAAAAEAAIA8126WAABAAA=";
-	char reply[] = "QgARAAEAAAAEAAIA8126WAABAAA=";
+	//char reply[] = "Qg8AAQAABAACAATkSmYAAAAA";
+	char reply[] = "Qg8AAQAABAACALy1WWgACAAA";
 	
 
 	BLURT;
@@ -35,7 +34,7 @@ int main(int argc, char *argv[])
 	printf("t = %p, chr = %p\n", t, chr);
 
 	t->tag = 0x41;
-	t->addr = 1;	/* target addr */
+	t->addr = 0x1;	/* target addr */
 	t->encrypt_mode = 0;
 	t->effective_data_len = len;
 	t->cmd = cmd;
@@ -58,7 +57,6 @@ int main(int argc, char *argv[])
 
 	i = p_tlv_s_opr->generate(p_tlv_s_opr, &t, &chr, &asciilen);
 
-
 	if (i)
 	{
 		printf("Error! code %d\n", i);
@@ -79,12 +77,13 @@ int main(int argc, char *argv[])
 
 	p_tlv_s_opr->role = RESPONDER;
 
-	
+#if 1
 	asciilen = sizeof(reply);
 	free(chr);
 	chr = NULL;
 	chr = (char *)malloc(asciilen * sizeof(uint8_t));
 	memcpy(chr, reply, asciilen);
+#endif
 
 	i = p_tlv_s_opr->parse(p_tlv_s_opr, &t, &chr, asciilen);	
 

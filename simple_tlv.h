@@ -4,9 +4,10 @@
 #include <stdint.h>
 #include "os_match.h"
 
-
+#if 0	//for debug
 #define ENCRYPT_DES
 #define ENCRYPT_AES
+#endif
 
 typedef uint16_t tlvlensize;
 typedef uint16_t tlvaddsize;
